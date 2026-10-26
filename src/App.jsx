@@ -351,11 +351,23 @@ function App() {
   const [systemRotation, setSystemRotation] = useState({ x: -7, y: 0 });
   const systemDrag = useRef({ active: false, pointerId: null, lastX: 0, lastY: 0 });
 
-  const handleSystemPointerDown = (event) => {
-    if (event.target.closest?.("canvas")) return;
-    systemDrag.current = { active: true, pointerId: event.pointerId, lastX: event.clientX, lastY: event.clientY };
-    event.currentTarget.setPointerCapture?.(event.pointerId);
+  
+const handleSystemPointerDown = (event) => {
+  // Do not start dragging when clicking buttons or controls
+  if (event.target.closest?.("button, input, a, canvas")) {
+    return;
+  }
+
+  systemDrag.current = {
+    active: true,
+    pointerId: event.pointerId,
+    lastX: event.clientX,
+    lastY: event.clientY,
   };
+
+  event.currentTarget.setPointerCapture?.(event.pointerId);
+};
+
 
   const handleSystemPointerMove = (event) => {
     const drag = systemDrag.current;
